@@ -11,7 +11,7 @@ namespace Savorboard.CAP.InMemoryMessageQueue
         /// <param name="options">CAP configuration options</param>
         public static CapOptions UseInMemoryMessageQueue(this CapOptions options)
         {
-            options.RegisterExtension(new AzureServiceBusOptionsExtension());
+            options.RegisterExtension(new InMemoryMqOptionsExtension());
             return options;
         }
     }

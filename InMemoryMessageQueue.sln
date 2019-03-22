@@ -7,7 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{62B4F034-04F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{0EE22028-D141-468A-BED5-506153E68942}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Savorboard.CAP.InMemoryMessageQueue", "src\Savorboard.CAP.InMemoryMessageQueue\Savorboard.CAP.InMemoryMessageQueue.csproj", "{D05A3450-2073-40BC-A2C6-7EFF64FFFB29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Savorboard.CAP.InMemoryMessageQueue", "src\Savorboard.CAP.InMemoryMessageQueue\Savorboard.CAP.InMemoryMessageQueue.csproj", "{D05A3450-2073-40BC-A2C6-7EFF64FFFB29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InMemorySample", "samples\InMemorySample\InMemorySample.csproj", "{F7D1DF9C-092F-4764-BEF4-25B7386F4C05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,12 +21,17 @@ Global
 		{D05A3450-2073-40BC-A2C6-7EFF64FFFB29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D05A3450-2073-40BC-A2C6-7EFF64FFFB29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D05A3450-2073-40BC-A2C6-7EFF64FFFB29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7D1DF9C-092F-4764-BEF4-25B7386F4C05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7D1DF9C-092F-4764-BEF4-25B7386F4C05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7D1DF9C-092F-4764-BEF4-25B7386F4C05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7D1DF9C-092F-4764-BEF4-25B7386F4C05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D05A3450-2073-40BC-A2C6-7EFF64FFFB29} = {62B4F034-04F0-4E20-818A-EA2C37A6A461}
+		{F7D1DF9C-092F-4764-BEF4-25B7386F4C05} = {0EE22028-D141-468A-BED5-506153E68942}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {39E31313-9A79-4DA3-8F76-67D493FA239E}

@@ -1,7 +1,4 @@
-﻿// Copyright (c) .NET Core Community. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for license information.
-
-using DotNetCore.CAP;
+﻿using DotNetCore.CAP;
 using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
@@ -14,6 +11,7 @@ namespace Savorboard.CAP.InMemoryMessageQueue
         {
             services.AddSingleton<CapMessageQueueMakerService>();
 
+            services.AddSingleton<InMemoryQueue>();
             services.AddSingleton<IConsumerClientFactory, InMemoryConsumerClientFactory>();
             services.AddSingleton<IPublishExecutor, InMemoryMqPublishMessageSender>();
             services.AddSingleton<IPublishMessageSender, InMemoryMqPublishMessageSender>();
