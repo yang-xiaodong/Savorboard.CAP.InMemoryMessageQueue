@@ -1,11 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DocumentationFile>bin\$(Configuration)\netstandard2.0\Savorboard.CAP.InMemoryMessageQueue.xml</DocumentationFile>
+    <NoWarn>1701;1702;1705;CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DotNetCore.CAP" Version="2.4.2" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All"/>
   </ItemGroup>
+
+  <PropertyGroup Label="Package">
+    <Product>CAP</Product>
+    <Authors>Savorboard</Authors>
+    <RepositoryUrl>https://github.com/yang-xiaodong/Savorboard.CAP.InMemoryMessageQueue</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
+    <PackageProjectUrl>https://github.com/yang-xiaodong/Savorboard.CAP.InMemoryMessageQueue</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/yang-xiaodong/Savorboard.CAP.InMemoryMessageQueue/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageTags>CAP;InMemoryMessageQueue;</PackageTags>
+    <Description>InMemoryMessageQueue For CAP.</Description>
+  </PropertyGroup>
+
+  <!-- Using SourceLink -->
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup> 
 
 </Project>
