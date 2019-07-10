@@ -1,13 +1,12 @@
 <p align="center">
   <img height="160" src="https://raw.githubusercontent.com/dotnetcore/CAP/master/docs/content/img/logo.svg?sanitize=true">
+  <br>
+  <span style="font-size:20px">CAP</span>
 </p>
-<h1 align="center" style="margin-top:0px">CAP</h1> 
  
-# InMemoryMessageQueue For CAP  　　　　　　　　　　　　　　
+# InMemoryMessageQueue For CAP
 
-<p align="right">
-  <a src="https://github.com/dotnetcore/CAP/blob/master/README.zh-cn.md">中文</a>
-</p>
+<a style="float: right;" href="https://github.com/dotnetcore/CAP/blob/master/README.zh-cn.md">中文</a>
 
 [![Build status](https://ci.appveyor.com/api/projects/status/txg29kmg0o6u4c2j?svg=true)](https://ci.appveyor.com/project/yuleyule66/savorboard-cap-inmemorymessagequeue)
 
