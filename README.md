@@ -1,7 +1,7 @@
 <p align="center">
   <img height="160" src="https://raw.githubusercontent.com/dotnetcore/CAP/master/docs/content/img/logo.svg?sanitize=true">
   <br>
-  <span style="font-size:20px">CAP</span>
+  <span style="font-size:2em;font-weight:600">CAP</span>
 </p>
  
 # InMemoryMessageQueue For CAP
