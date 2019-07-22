@@ -13,12 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InMemorySample", "samples\I
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2EDDAD61-256A-403B-8E84-CCD2BCE228FF}"
 	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{91AEDD30-E449-4D30-B47E-22DA9CCBA1B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InMemoryQueueTest", "test\InMemoryQueueTest\InMemoryQueueTest.csproj", "{401BB4F1-5B34-4DCD-B296-226A0232A598}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InMemoryQueueTest", "test\InMemoryQueueTest\InMemoryQueueTest.csproj", "{401BB4F1-5B34-4DCD-B296-226A0232A598}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
