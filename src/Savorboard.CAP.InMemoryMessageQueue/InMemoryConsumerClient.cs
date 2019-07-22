@@ -42,7 +42,10 @@ namespace Savorboard.CAP.InMemoryMessageQueue
 
         public void Listening(TimeSpan timeout, CancellationToken cancellationToken)
         {
-            // ignore
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                cancellationToken.WaitHandle.WaitOne(timeout);
+            }
         }
 
         public void Commit()
