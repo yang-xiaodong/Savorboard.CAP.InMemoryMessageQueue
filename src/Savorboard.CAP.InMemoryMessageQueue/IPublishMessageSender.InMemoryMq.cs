@@ -4,6 +4,7 @@ using DotNetCore.CAP;
 using DotNetCore.CAP.Internal;
 using DotNetCore.CAP.Processor.States;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Savorboard.CAP.InMemoryMessageQueue
 {
@@ -14,14 +15,18 @@ namespace Savorboard.CAP.InMemoryMessageQueue
 
         public InMemoryMqPublishMessageSender(InMemoryQueue queue,
             ILogger<InMemoryMqPublishMessageSender> logger,
-            CapOptions options,
+            IOptions<CapOptions> options,
             IStateChanger stateChanger,
             IStorageConnection connection)
             : base(logger, options, connection, stateChanger)
         {
             _queue = queue;
             _logger = logger;
+
+            ServersAddress = string.Empty;
         }
+
+        protected override string ServersAddress { get; }
 
         public override async Task<OperateResult> PublishAsync(string keyName, string content)
         {
