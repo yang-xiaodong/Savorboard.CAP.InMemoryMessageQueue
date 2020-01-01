@@ -1,4 +1,5 @@
 ﻿using DotNetCore.CAP;
+using DotNetCore.CAP.Transport;
 using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
@@ -13,8 +14,7 @@ namespace Savorboard.CAP.InMemoryMessageQueue
 
             services.AddSingleton<InMemoryQueue>();
             services.AddSingleton<IConsumerClientFactory, InMemoryConsumerClientFactory>();
-            services.AddSingleton<IPublishExecutor, InMemoryMqPublishMessageSender>();
-            services.AddSingleton<IPublishMessageSender, InMemoryMqPublishMessageSender>();
+            services.AddSingleton<ITransport, InMemoryMqTransport>();
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using DotNetCore.CAP;
+using DotNetCore.CAP.Messages;
+using DotNetCore.CAP.Transport;
 using Microsoft.Extensions.Logging;
 
 namespace Savorboard.CAP.InMemoryMessageQueue
@@ -10,23 +11,23 @@ namespace Savorboard.CAP.InMemoryMessageQueue
     {
         private readonly ILogger _logger;
         private readonly InMemoryQueue _queue;
-        private readonly string _subscriptionName;
+        private readonly string _groupId;
 
         public InMemoryConsumerClient(
             ILogger logger,
             InMemoryQueue queue,
-            string subscriptionName)
+            string groupId)
         {
             _logger = logger;
             _queue = queue;
-            _subscriptionName = subscriptionName;
+            _groupId = groupId;
         }
 
-        public event EventHandler<MessageContext> OnMessageReceived;
+        public event EventHandler<TransportMessage> OnMessageReceived;
 
         public event EventHandler<LogMessageEventArgs> OnLog;
 
-        public string ServersAddress => string.Empty;
+        public BrokerAddress BrokerAddress => new BrokerAddress("InMemory", "localhost");
 
         public void Subscribe(IEnumerable<string> topics)
         {
@@ -34,7 +35,7 @@ namespace Savorboard.CAP.InMemoryMessageQueue
 
             foreach (var topic in topics)
             {
-                _queue.Subscribe(_subscriptionName, OnConsumerReceived, topic);
+                _queue.Subscribe(_groupId, OnConsumerReceived, topic);
 
                 _logger.LogInformation($"InMemory message queue initialize the topic: {topic}");
             }
@@ -48,12 +49,12 @@ namespace Savorboard.CAP.InMemoryMessageQueue
             }
         }
 
-        public void Commit()
+        public void Commit(object sender)
         {
             // ignore
         }
 
-        public void Reject()
+        public void Reject(object sender)
         {
             // ignore
         }
@@ -65,7 +66,7 @@ namespace Savorboard.CAP.InMemoryMessageQueue
 
         #region private methods
 
-        private void OnConsumerReceived(MessageContext e)
+        private void OnConsumerReceived(TransportMessage e)
         {
             OnMessageReceived?.Invoke(null, e);
         }

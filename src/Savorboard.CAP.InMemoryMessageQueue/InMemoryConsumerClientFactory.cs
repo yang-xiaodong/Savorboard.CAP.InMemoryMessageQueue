@@ -1,4 +1,4 @@
-﻿using DotNetCore.CAP;
+﻿using DotNetCore.CAP.Transport;
 using Microsoft.Extensions.Logging;
 
 namespace Savorboard.CAP.InMemoryMessageQueue

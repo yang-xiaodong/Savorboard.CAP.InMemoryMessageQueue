@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DotNetCore.CAP;
+using DotNetCore.CAP.Messages;
 using Microsoft.Extensions.Logging;
 
 namespace Savorboard.CAP.InMemoryMessageQueue
@@ -10,15 +10,15 @@ namespace Savorboard.CAP.InMemoryMessageQueue
         private readonly ILogger<InMemoryQueue> _logger;
         private static readonly object Lock = new object();
 
-        private readonly Dictionary<string, (Action<MessageContext>, List<string>)> _groupTopics;
+        private readonly Dictionary<string, (Action<TransportMessage>, List<string>)> _groupTopics;
 
         public InMemoryQueue(ILogger<InMemoryQueue> logger)
         {
             _logger = logger;
-            _groupTopics = new Dictionary<string, (Action<MessageContext>, List<string>)>();
+            _groupTopics = new Dictionary<string, (Action<TransportMessage>, List<string>)>();
         }
 
-        public void Subscribe(string groupId, Action<MessageContext> received, string topic)
+        public void Subscribe(string groupId, Action<TransportMessage> received, string topic)
         {
             lock (Lock)
             {
@@ -42,25 +42,20 @@ namespace Savorboard.CAP.InMemoryMessageQueue
             _groupTopics.Clear();
         }
 
-        public void Send(string topic, string content)
+        public void Send(TransportMessage message)
         {
             foreach (var groupTopic in _groupTopics)
             {
-                if (groupTopic.Value.Item2.Contains(topic))
+                if (groupTopic.Value.Item2.Contains(message.GetName()))
                 {
                     try
                     {
-                        groupTopic.Value.Item1?.Invoke(
-                            new MessageContext
-                            {
-                                Group = groupTopic.Key,
-                                Name = topic,
-                                Content = content
-                            });
+                        message.Headers[Headers.Group] = groupTopic.Key;
+                        groupTopic.Value.Item1?.Invoke(message);
                     }
                     catch (Exception e)
                     {
-                        _logger.LogError(e, $"Consumption message raises an exception. Group-->{groupTopic.Key} Name-->{topic}");
+                        _logger.LogError(e, $"Consumption message raises an exception. Group-->{groupTopic.Key} Name-->{message.GetName()}");
                     }
                 }
             }
