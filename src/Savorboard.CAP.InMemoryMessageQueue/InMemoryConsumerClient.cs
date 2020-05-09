@@ -37,7 +37,7 @@ namespace Savorboard.CAP.InMemoryMessageQueue
             {
                 _queue.Subscribe(_groupId, OnConsumerReceived, topic);
 
-                _logger.LogInformation($"InMemory message queue initialize the topic: {topic}");
+                _logger.LogInformation($"InMemory message queue initialize the topic: {_groupId} {topic}");
             }
         }
 
