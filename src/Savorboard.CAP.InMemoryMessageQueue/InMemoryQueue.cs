@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DotNetCore.CAP.Messages;
 using Microsoft.Extensions.Logging;
 
@@ -44,19 +45,18 @@ namespace Savorboard.CAP.InMemoryMessageQueue
 
         public void Send(TransportMessage message)
         {
-            foreach (var groupTopic in _groupTopics)
+            var name = message.GetName();
+            foreach (var groupTopic in _groupTopics.Where(o => o.Value.Item2.Contains(name)))
             {
-                if (groupTopic.Value.Item2.Contains(message.GetName()))
+                try
                 {
-                    try
-                    {
-                        message.Headers[Headers.Group] = groupTopic.Key;
-                        groupTopic.Value.Item1?.Invoke(message);
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogError(e, $"Consumption message raises an exception. Group-->{groupTopic.Key} Name-->{message.GetName()}");
-                    }
+                    var message_copy = new TransportMessage(message.Headers.ToDictionary(o => o.Key, o => o.Value), message.Body);
+                    message_copy.Headers[Headers.Group] = groupTopic.Key;
+                    groupTopic.Value.Item1?.Invoke(message_copy);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, $"Consumption message raises an exception. Group-->{groupTopic.Key} Name-->{name}");
                 }
             }
         }
