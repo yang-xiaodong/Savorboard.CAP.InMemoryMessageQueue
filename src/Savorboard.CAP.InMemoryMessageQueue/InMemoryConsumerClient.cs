@@ -13,10 +13,7 @@ namespace Savorboard.CAP.InMemoryMessageQueue
         private readonly InMemoryQueue _queue;
         private readonly string _groupId;
 
-        public InMemoryConsumerClient(
-            ILogger logger,
-            InMemoryQueue queue,
-            string groupId)
+        public InMemoryConsumerClient(ILogger logger, InMemoryQueue queue, string groupId)
         {
             _logger = logger;
             _queue = queue;
@@ -56,7 +53,11 @@ namespace Savorboard.CAP.InMemoryMessageQueue
 
         public void Reject(object sender)
         {
-            // ignore
+            OnLog.Invoke(null, new LogMessageEventArgs()
+            {
+                LogType = MqLogType.ConsumeError,
+                Reason = "Inmemory queue not support reject"
+            });
         }
 
         public void Dispose()
@@ -70,6 +71,7 @@ namespace Savorboard.CAP.InMemoryMessageQueue
         {
             OnMessageReceived?.Invoke(null, e);
         }
+
         #endregion private methods
     }
 }

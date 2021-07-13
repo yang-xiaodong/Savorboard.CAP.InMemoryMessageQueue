@@ -8,11 +8,16 @@
     <DocumentationFile>bin\$(Configuration)\netstandard2.0\Savorboard.CAP.InMemoryMessageQueue.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;CS1591</NoWarn>
   </PropertyGroup>
-
+	
+  <ItemGroup>
+	<None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
+	
   <ItemGroup>
     <PackageReference Include="DotNetCore.CAP" Version="5.1.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
+	
 
   <PropertyGroup Label="Package">
     <Product>CAP</Product>
@@ -21,7 +26,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
     <PackageProjectUrl>https://github.com/yang-xiaodong/Savorboard.CAP.InMemoryMessageQueue</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/yang-xiaodong/Savorboard.CAP.InMemoryMessageQueue/blob/master/LICENSE</PackageLicenseUrl>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>CAP;InMemoryMessageQueue;</PackageTags>
     <Description>InMemoryMessageQueue For CAP.</Description>
   </PropertyGroup>
