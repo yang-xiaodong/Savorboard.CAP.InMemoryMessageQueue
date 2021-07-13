@@ -4,7 +4,7 @@
  
 # InMemoryMessageQueue For CAP
 
-[![Build status](https://ci.appveyor.com/api/projects/status/txg29kmg0o6u4c2j?svg=true)](https://ci.appveyor.com/project/yuleyule66/savorboard-cap-inmemorymessagequeue)
+[![Build status](https://ci.appveyor.com/api/projects/status/txg29kmg0o6u4c2j?svg=true)](https://ci.appveyor.com/project/yang-xiaodong/savorboard-cap-inmemorymessagequeue)
 
 
 
