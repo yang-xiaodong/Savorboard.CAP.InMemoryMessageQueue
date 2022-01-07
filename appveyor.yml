@@ -1,5 +1,5 @@
 version: '{build}'
-os: Visual Studio 2019
+os: Visual Studio 2022
 branches:
   only:
   - master
@@ -19,6 +19,6 @@ deploy:
   on:
     appveyor_repo_tag: true
   api_key:
-    secure: 62g+D0FPQQgVHQE+VaLPri7EAoQgu8WQbtXaawwa0c8o6fLxTc2oJSx2MgcLvpzN
-  skip_symbols: true
+    secure: hZmhgcYCuVBJzPljwysslhumZnIlR+Y1FdlT6+XsfHvTXwUzAeCAurcppZ4cKNTz
+  skip_symbols: false
   artifact: /artifacts\/packages\/.+\.nupkg/
