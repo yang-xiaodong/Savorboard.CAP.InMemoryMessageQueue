@@ -9,8 +9,11 @@ environment:
 skip_commits:
   files:
     - LICENSE
+before_build:
+  - cmd: dotnet --version
 build_script:
 - ps: dotnet build Savorboard.CAP.InMemoryMessageQueue.sln
+- ps: dotnet package ./src/Savorboard.CAP.InMemoryMessageQueue/Savorboard.CAP.InMemoryMessageQueue.csproj -o artifacts/packages
 test: off
 artifacts:
 - path: artifacts/packages/*.nupkg
