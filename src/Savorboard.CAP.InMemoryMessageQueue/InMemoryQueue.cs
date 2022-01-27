@@ -11,7 +11,7 @@ namespace Savorboard.CAP.InMemoryMessageQueue
         private readonly ILogger<InMemoryQueue> _logger;
         private static readonly object Lock = new object();
 
-        private readonly Dictionary<string, (Action<TransportMessage>, List<string>)> _groupTopics;
+        internal readonly Dictionary<string, (Action<TransportMessage>, List<string>)> _groupTopics;
 
         public InMemoryQueue(ILogger<InMemoryQueue> logger)
         {
@@ -40,7 +40,18 @@ namespace Savorboard.CAP.InMemoryMessageQueue
 
         public void ClearSubscriber()
         {
-            _groupTopics.Clear();
+            lock (Lock)
+            {
+                _groupTopics.Clear();
+            }
+        }
+
+        public void ClearSubscriber(string groupId)
+        {
+            lock (Lock)
+            {
+                _groupTopics.Remove(groupId);
+            }
         }
 
         public void Send(TransportMessage message)

@@ -62,7 +62,7 @@ namespace Savorboard.CAP.InMemoryMessageQueue
 
         public void Dispose()
         {
-            _queue.ClearSubscriber();
+            _queue.ClearSubscriber(_groupId);
         }
 
         #region private methods
