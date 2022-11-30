@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using DotNetCore.CAP.Messages;
 using DotNetCore.CAP.Transport;
 using Microsoft.Extensions.Logging;
@@ -20,9 +21,9 @@ namespace Savorboard.CAP.InMemoryMessageQueue
             _groupId = groupId;
         }
 
-        public event EventHandler<TransportMessage> OnMessageReceived;
+        public Func<TransportMessage, object, Task> OnMessageCallback { get; set; }
 
-        public event EventHandler<LogMessageEventArgs> OnLog;
+        public Action<LogMessageEventArgs> OnLogCallback { get; set; }
 
         public BrokerAddress BrokerAddress => new BrokerAddress("InMemory", "localhost");
 
@@ -53,7 +54,7 @@ namespace Savorboard.CAP.InMemoryMessageQueue
 
         public void Reject(object sender)
         {
-            OnLog.Invoke(null, new LogMessageEventArgs()
+            OnLogCallback?.Invoke(new LogMessageEventArgs()
             {
                 LogType = MqLogType.ConsumeError,
                 Reason = "Inmemory queue not support reject"
@@ -69,7 +70,7 @@ namespace Savorboard.CAP.InMemoryMessageQueue
 
         private void OnConsumerReceived(TransportMessage e)
         {
-            OnMessageReceived?.Invoke(null, e);
+            OnMessageCallback?.Invoke(e, null);
         }
 
         #endregion private methods

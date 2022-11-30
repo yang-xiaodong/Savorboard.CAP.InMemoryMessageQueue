@@ -10,7 +10,7 @@ namespace Savorboard.CAP.InMemoryMessageQueue
 
         public void AddServices(IServiceCollection services)
         {
-            services.AddSingleton<CapMessageQueueMakerService>();
+            services.AddSingleton(new CapMessageQueueMakerService("InMemoryQueue"));
 
             services.AddSingleton<InMemoryQueue>();
             services.AddSingleton<IConsumerClientFactory, InMemoryConsumerClientFactory>();

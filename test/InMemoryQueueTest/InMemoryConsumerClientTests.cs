@@ -39,8 +39,8 @@ namespace InMemoryQueueTest
 
             _sut.Dispose();
 
-            _queue._groupTopics.Should().NotContainKey(_groupId);
-            _queue._groupTopics.Should().NotBeEmpty();
+            _queue.GroupTopics.Should().NotContainKey(_groupId);
+            _queue.GroupTopics.Should().NotBeEmpty();
         }
     }
 }

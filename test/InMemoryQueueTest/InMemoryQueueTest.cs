@@ -47,7 +47,7 @@ namespace InMemoryQueueTest
             ManualResetEventSlim reset = new ManualResetEventSlim(false);
             queue.Subscribe("groupid", x =>
             {
-                Assert.Equal(content,Encoding.UTF8.GetString(x.Body));
+                Assert.Equal(content,Encoding.UTF8.GetString(x.Body.ToArray()));
                 reset.Set();
             }, topic);
             queue.Send(transportMsg);
