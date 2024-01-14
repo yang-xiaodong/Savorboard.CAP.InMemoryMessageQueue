@@ -31,7 +31,7 @@ namespace InMemoryQueueTest
 
            var headers = new Dictionary<string, string>();
 
-            var messageId = SnowflakeId.Default().NextId().ToString();
+            var messageId = new SnowflakeId().NextId().ToString();
             headers.Add(Headers.MessageId, messageId);
             headers.Add(Headers.MessageName, topic);
             headers.Add(Headers.Type, typeof(string).FullName);
