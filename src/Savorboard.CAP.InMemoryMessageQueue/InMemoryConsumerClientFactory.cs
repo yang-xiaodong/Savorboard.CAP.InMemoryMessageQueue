@@ -3,21 +3,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Savorboard.CAP.InMemoryMessageQueue
 {
-    internal sealed class InMemoryConsumerClientFactory : IConsumerClientFactory
+    internal sealed class InMemoryConsumerClientFactory(ILoggerFactory loggerFactory, InMemoryQueue queue) : IConsumerClientFactory
     {
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly InMemoryQueue _queue;
-
-        public InMemoryConsumerClientFactory(ILoggerFactory loggerFactory, InMemoryQueue queue)
+        public IConsumerClient Create(string groupId, byte groupConcurrent)
         {
-            _loggerFactory = loggerFactory;
-            _queue = queue;
-        }
-
-        public IConsumerClient Create(string groupId)
-        {
-            var logger = _loggerFactory.CreateLogger(typeof(InMemoryConsumerClient));
-            return new InMemoryConsumerClient(logger, _queue, groupId);
+            var logger = loggerFactory.CreateLogger(typeof(InMemoryConsumerClient));
+            return new InMemoryConsumerClient(logger, queue, groupId, groupConcurrent);
         }
     }
 }

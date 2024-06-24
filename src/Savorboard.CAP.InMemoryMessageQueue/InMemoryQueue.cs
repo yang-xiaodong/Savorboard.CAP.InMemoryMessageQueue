@@ -1,57 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetCore.CAP.Messages;
 using Microsoft.Extensions.Logging;
 
 namespace Savorboard.CAP.InMemoryMessageQueue
 {
-    internal class InMemoryQueue
+    internal class InMemoryQueue(ILogger<InMemoryQueue> logger)
     {
-        private readonly ILogger<InMemoryQueue> _logger;
         private static readonly object Lock = new();
 
-        internal readonly Dictionary<string, (Action<TransportMessage>, List<string>)> GroupTopics;
+        private readonly Dictionary<string, List<string>> _topicGroups = new();
+        private readonly Dictionary<string, InMemoryConsumerClient> _consumerClients = new();
 
-        public InMemoryQueue(ILogger<InMemoryQueue> logger)
-        {
-            _logger = logger;
-            GroupTopics = new Dictionary<string, (Action<TransportMessage>, List<string>)>();
-        }
-
-        public void Subscribe(string groupId, Action<TransportMessage> received, string topic)
+        public void RegisterConsumerClient(string groupId, InMemoryConsumerClient consumerClient)
         {
             lock (Lock)
             {
-                if (GroupTopics.ContainsKey(groupId))
+                _consumerClients[groupId] = consumerClient;
+            }
+        }
+
+        public void Subscribe(string groupId, IEnumerable<string> topics)
+        {
+            lock (Lock)
+            {
+                foreach (var topic in topics)
                 {
-                    var topics = GroupTopics[groupId];
-                    if (!topics.Item2.Contains(topic))
+                    if (_topicGroups.TryGetValue(topic, out var value))
                     {
-                        topics.Item2.Add(topic);
+                        if (!value.Contains(groupId))
+                        {
+                            value.Add(groupId);
+                        }
                     }
-                }
-                else
-                {
-                    GroupTopics.Add(groupId, (received, new List<string> { topic }));
+                    else
+                    {
+                        _topicGroups.Add(topic, [groupId]);
+                    }    
                 }
             }
         }
 
-        public void ClearSubscriber()
+        public void Unsubscribe(string groupId)
         {
-            lock (Lock)
-            {
-                GroupTopics.Clear();
-            }
-        }
+            _consumerClients.Remove(groupId);
+            logger.LogInformation("Removed consumer client from InMemoryQueue! --> Group:"+ groupId);
 
-        public void ClearSubscriber(string groupId)
-        {
-            lock (Lock)
-            {
-                GroupTopics.Remove(groupId);
-            }
         }
 
         public void Send(TransportMessage message)
@@ -59,22 +53,24 @@ namespace Savorboard.CAP.InMemoryMessageQueue
             var name = message.GetName();
             lock (Lock)
             {
-                foreach (var groupTopic in GroupTopics.Where(o => o.Value.Item2.Contains(name)))
+                if (_topicGroups.TryGetValue(name, out var groupList))
                 {
-                    try
+                    foreach (var groupId in groupList)
                     {
-                        var messageCopy = new TransportMessage(message.Headers.ToDictionary(o => o.Key, o => o.Value), message.Body)
+                        if (_consumerClients.TryGetValue(groupId, out var consumerClient))
                         {
-                            Headers =
-                            {
-                                [Headers.Group] = groupTopic.Key
-                            }
-                        };
-                        groupTopic.Value.Item1?.Invoke(messageCopy);
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogError(e, $"Consumption message raises an exception. Group-->{groupTopic.Key} Name-->{name}");
+                            var messageCopy =
+                                new TransportMessage(message.Headers.ToDictionary(o => o.Key, o => o.Value),
+                                    message.Body)
+                                {
+                                    Headers =
+                                    {
+                                        [Headers.Group] = groupId
+                                    }
+                                };
+
+                            consumerClient.AddSubscribeMessage(messageCopy);
+                        }
                     }
                 }
             }

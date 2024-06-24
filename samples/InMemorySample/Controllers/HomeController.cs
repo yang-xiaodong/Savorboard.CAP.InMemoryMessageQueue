@@ -35,13 +35,20 @@ namespace InMemorySample.Controllers
             });
         }
 
-        [CapSubscribe("inmemory.test")]
+        [CapSubscribe("inmemory.test", Group = "Hello")]
         [NonAction]
         public async Task SubscriberTest(JsonElement jEle, CancellationToken token)
         {
-            Console.WriteLine($"-------------{DateTime.Now}----------------");
-            Console.WriteLine(jEle.ToString());
-            await Task.Delay(100, token);
+            Console.WriteLine($"-----------Hello Group----------------" + DateTime.Now);
+            await Task.Delay(4000, token);
+        }
+
+        [CapSubscribe("inmemory.test", GroupConcurrent = 2)]
+        [NonAction]
+        public async Task SubscriberTestConcurrent(JsonElement jEle, CancellationToken token)
+        {
+            Console.WriteLine($"-------------SubscriberTestConcurrent----------------" + DateTime.Now);
+            await Task.Delay(2000, token);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,66 +14,67 @@ namespace Savorboard.CAP.InMemoryMessageQueue
         private readonly ILogger _logger;
         private readonly InMemoryQueue _queue;
         private readonly string _groupId;
+        private readonly byte _groupConcurrent;
+        private readonly BlockingCollection<TransportMessage> _messageQueue = new();
+        private readonly SemaphoreSlim _semaphore;
 
-        public InMemoryConsumerClient(ILogger logger, InMemoryQueue queue, string groupId)
+        public InMemoryConsumerClient(ILogger logger, InMemoryQueue queue, string groupId, byte groupConcurrent)
         {
             _logger = logger;
             _queue = queue;
             _groupId = groupId;
+            _groupConcurrent = groupConcurrent;
+            _semaphore = new SemaphoreSlim(groupConcurrent);
+            _queue.RegisterConsumerClient(groupId, this);
         }
 
         public Func<TransportMessage, object, Task> OnMessageCallback { get; set; }
 
         public Action<LogMessageEventArgs> OnLogCallback { get; set; }
 
-        public BrokerAddress BrokerAddress => new BrokerAddress("InMemory", "localhost");
+        public BrokerAddress BrokerAddress => new("InMemory", "localhost");
 
         public void Subscribe(IEnumerable<string> topics)
         {
             if (topics == null) throw new ArgumentNullException(nameof(topics));
 
-            foreach (var topic in topics)
-            {
-                _queue.Subscribe(_groupId, OnConsumerReceived, topic);
+            _queue.Subscribe(_groupId, topics);
+        }
 
-                _logger.LogInformation($"InMemory message queue initialize the topic: {_groupId} {topic}");
-            }
+        public void AddSubscribeMessage(TransportMessage message)
+        {
+            _messageQueue.Add(message);
         }
 
         public void Listening(TimeSpan timeout, CancellationToken cancellationToken)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            foreach (var message in _messageQueue.GetConsumingEnumerable(cancellationToken))
             {
-                cancellationToken.WaitHandle.WaitOne(timeout);
+                if (_groupConcurrent > 0)
+                {
+                    _semaphore.Wait(cancellationToken);
+                    Task.Run(() => OnMessageCallback?.Invoke(message, null), cancellationToken).ConfigureAwait(false);
+                }
+                else
+                {
+                    OnMessageCallback?.Invoke(message, null).ConfigureAwait(false).GetAwaiter().GetResult();
+                }
             }
         }
 
         public void Commit(object sender)
         {
-            // ignore
+            _semaphore.Release();
         }
 
         public void Reject(object sender)
         {
-            OnLogCallback?.Invoke(new LogMessageEventArgs()
-            {
-                LogType = MqLogType.ConsumeError,
-                Reason = "Inmemory queue not support reject"
-            });
+            _semaphore.Release();
         }
 
         public void Dispose()
         {
-            _queue.ClearSubscriber(_groupId);
+            _queue.Unsubscribe(_groupId);
         }
-
-        #region private methods
-
-        private void OnConsumerReceived(TransportMessage e)
-        {
-            OnMessageCallback?.Invoke(e, null);
-        }
-
-        #endregion private methods
     }
 }

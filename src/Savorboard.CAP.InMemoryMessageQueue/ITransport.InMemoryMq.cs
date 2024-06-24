@@ -8,24 +8,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Savorboard.CAP.InMemoryMessageQueue
 {
-    internal class InMemoryMqTransport : ITransport
+    internal class InMemoryMqTransport(InMemoryQueue queue, ILogger<InMemoryMqTransport> logger) : ITransport
     {
-        private readonly InMemoryQueue _queue;
-        private readonly ILogger _logger;
+        private readonly ILogger _logger = logger;
 
-        public BrokerAddress BrokerAddress => new BrokerAddress("InMemory", "localhost");
-
-        public InMemoryMqTransport(InMemoryQueue queue, ILogger<InMemoryMqTransport> logger)
-        {
-            _queue = queue;
-            _logger = logger;
-        }
+        public BrokerAddress BrokerAddress => new("InMemory", "localhost");
 
         public Task<OperateResult> SendAsync(TransportMessage message)
         {
             try
             {
-                _queue.Send(message);
+                queue.Send(message);
 
                 _logger.LogDebug($"Event message [{message.GetName()}] has been published.");
 
