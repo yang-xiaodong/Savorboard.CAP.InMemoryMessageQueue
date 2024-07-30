@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNetCore.CAP.Messages;
 using Microsoft.Extensions.Logging;
@@ -72,6 +73,11 @@ namespace Savorboard.CAP.InMemoryMessageQueue
                             consumerClient.AddSubscribeMessage(messageCopy);
                         }
                     }
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        $"Cannot find the corresponding group for {name}. Have you subscribed?");
                 }
             }
         }
